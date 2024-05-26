@@ -46,8 +46,8 @@ data "archive_file" "code" {
 }
 
 resource "aws_lambda_function" "this" {
-  count            = length(var.lambda_names)
-  function_name    = var.lambda_names[count.index]
+  for_each         = toset(var.lambda_names)
+  function_name    = each.value
   filename         = "${path.module}/lambda_function_payload.zip"
   role             = aws_iam_role.this.arn
   runtime          = var.runtime
@@ -55,6 +55,6 @@ resource "aws_lambda_function" "this" {
   source_code_hash = data.archive_file.code.output_base64sha256
 
   tags = {
-    Name = var.lambda_names[count.index]
+    Name = each.value
   }
 }

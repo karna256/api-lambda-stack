@@ -4,9 +4,9 @@ module "lambdas" {
 }
 
 module "api" {
-  source = "./modules/common/api"
-  lambda_arns = module.lambdas.lambda_arns
-  api_name = "api-gateway-test"
-  lambda_invoke_arns = module.lambdas.lambda_invoke_arns
-  lambda_names = module.lambdas.lambda_names
+  source             = "./modules/common/api"
+  lambda_arns        = module.lambdas.lambda_arns
+  api_name           = "api-gateway-test"
+  lambda_invoke_arns = { for name in module.lambdas.lambda_names : name => lookup(module.lambdas.lambda_invoke_arns, name) }
+  lambda_names       = module.lambdas.lambda_names
 }

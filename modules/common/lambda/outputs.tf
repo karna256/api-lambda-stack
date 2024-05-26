@@ -9,6 +9,6 @@ output "lambda_names" {
 }
 
 output "lambda_invoke_arns" {
-  value       = [for i in aws_lambda_function.this : i.invoke_arn]
+  value       = { for i in aws_lambda_function.this : i.function_name => i.invoke_arn }
   description = "The invoke ARNs of the Lambda functions"
 }
